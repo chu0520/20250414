@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>粒子連線背景</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+  <script src="sketch.js"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden; /* 防止滾動條出現 */
+      background-color: #f5f5dc; /* 米色背景 */
+    }
+    #backgroundImage {
+      position: fixed; /* 固定位置 */
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px; /* 調整圖片大小 */
+      height: auto;
+      z-index: 0; /* 確保圖片在最底層 */
+      pointer-events: none; /* 確保圖片不會干擾滑鼠事件 */
+    }
+    #buttons {
+      position: absolute;
+      top: 10px;
+      right: 10px; /* 改為右上角 */
+      background: transparent; /* 背景改為透明 */
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 10;
+    }
+    #card {
+      display: none; /* 預設隱藏 */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      z-index: 20;
+    }
+    iframe {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%; /* 調整寬度 */
+      height: 80%; /* 調整高度 */
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 增加陰影效果 */
+      z-index: 15;
+      display: none; /* 預設隱藏 */
+    }
+    button, select {
+      margin: 10px;
+      padding: 15px 20px; /* 增加按鈕大小 */
+      border: 2px solid #007BFF; /* 增加邊框 */
+      border-radius: 5px;
+      background-color: transparent; /* 背景透明 */
+      color: #007BFF; /* 按鈕文字顏色 */
+      font-size: 18px; /* 增加文字大小 */
+      font-weight: bold; /* 文字加粗 */
+      cursor: pointer;
+    }
+    button:hover, select:hover {
+      background-color: rgba(0, 123, 255, 0.2); /* 滑鼠懸停時增加透明背景 */
+    }
+    select {
+      appearance: none; /* 移除預設樣式 */
+    }
+  </style>
+</head>
+<body>
+  <img id="backgroundImage" src="1.png" alt="Background Image">
+  <div id="buttons">
+    <button onclick="navigateTo('home')">首頁</button>
+    <button onclick="navigateTo('about')">自我介紹</button>
+    <div style="display: inline-block; position: relative;">
+      <select id="portfolio" onchange="navigateToPortfolio(this.value)">
+        <option value="" disabled selected>作品集</option>
+        <option value="week1">第一周作業</option>
+        <option value="week2">第二周作業</option>
+        <option value="week3">第三周作業</option>
+        <option value="week4">第四周作業</option>
+      </select>
+    </div>
+    <button onclick="navigateTo('quiz')">測驗卷</button>
+    <button onclick="navigateTo('videos')">教學影片</button>
+  </div>
+  <div id="card">
+    <h2>自我介紹</h2>
+    <p>老師哈嚕嚕</p>
+    <p>我是教科1B朱玉萍</p>
+    <p>咪咪咪咪玉萍 咪咪咪咪</p>
+    <button onclick="closeCard()">關閉</button>
+  </div>
+  <iframe id="contentFrame" src="https://example.com" title="Example Iframe"></iframe>
+  <script>
+    function navigateTo(section) {
+      const iframe = document.getElementById('contentFrame');
+      const card = document.getElementById('card');
+      switch (section) {
+        case 'home':
+          iframe.style.display = 'none'; // 隱藏 IFRAME
+          break;
+        case 'about':
+          card.style.display = 'block'; // 顯示卡片
+          break;
+        case 'quiz':
+          iframe.style.display = 'block'; // 顯示 IFRAME
+          iframe.src = 'https://chu0520.github.io/202503103/'; // 測驗卷連結
+          break;
+        case 'videos':
+          iframe.style.display = 'block'; // 顯示 IFRAME
+          iframe.src = 'https://cfchen58.synology.me/%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%882024/B2/week1/20250217_092821.mp4'; // 教學影片連結
+          break;
+        default:
+          alert('未知的導航');
+      }
+    }
+
+    function navigateToPortfolio(week) {
+      const iframe = document.getElementById('contentFrame');
+      iframe.style.display = 'block'; // 顯示 IFRAME
+      switch (week) {
+        case 'week1':
+          iframe.src = 'https://chu0520.github.io/20250303/';
+          break;
+        case 'week2':
+          iframe.src = 'https://chu0520.github.io/202503103/';
+          break;
+        case 'week3':
+          iframe.src = 'https://chu0520.github.io/202503171/';
+          break;
+        case 'week4':
+          iframe.src = 'https://chu0520.github.io/202503241/';
+          break;
+        default:
+          iframe.src = 'https://example.com';
+      }
+    }
+
+    function closeCard() {
+      const card = document.getElementById('card');
+      card.style.display = 'none'; // 隱藏卡片
+    }
+
+    // 讓圖片隨著滑鼠移動
+    document.addEventListener('mousemove', (event) => {
+      const image = document.getElementById('backgroundImage');
+      const mouseX = event.clientX;
+      const mouseY = event.clientY;
+      image.style.top = mouseY + 'px';
+      image.style.left = mouseX + 'px';
+    });
+  </script>
+</body>
+</html>
